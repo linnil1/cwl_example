@@ -48,9 +48,56 @@ cwltool --user-space-docker-cmd=podman samindex.cwl      chrx_test.yml
 cwltool --user-space-docker-cmd=podman pipeline.cwl      chrx.yml
 ```
 
+## Run with airflow
+
+Airflow is a visualization & DAG manage tool
+
+``` bash
+# install (cwl-airflow will install airflow too)
+pip3 install cwl-airflow
+
+# init airflow
+export AIRFLOW_HOME=$PWD/airflow/
+airflow db init
+airflow users create -e linnil1 -f linnil1 -l linnil1 -r Admin -u linnil1 -p password
+
+# add my dags and copy input files
+mkdir airflow/dags/
+sed -e "s|\$PWD|$PWD|g" airflow/bowtie2_cwl.py > airflow/dags/bowtie2_cwl.py
+cp -r data/ airflow/cwl_inputs_folder
+
+# run
+airflow webserver
+
+# Run this in another window
+export AIRFLOW_HOME=$PWD/airflow/
+airflow scheduler
+
+# Run this in another window
+export AIRFLOW_HOME=$PWD/airflow/
+cwl-airflow init
+cwl-airflow api
+
+# Open browser localhost:8080
+# uername: linnil1
+# password: password
+# Find bowtie2_cwl
+# **Unpause DAG**
+# **Trigger with config**
+# Paste the output of this
+python3 -c "import json; import yaml; print(json.dumps({'job': yaml.load(open('chrx.yml'))}))"
+# {
+# "job": {
+#   "reference_fasta": {"class": "File", "path": "data/chrx.fa"},
+#   "fastq_1": {"class": "File", "path": "data/chrx.synthetic.read1.fq"},
+#   "fastq_2": {"class": "File", "path": "data/chrx.synthetic.read2.fq"},
+#   "threads": 10}
+# }                                                                          
+```
+
 ## TODO?
 * [x] Suffix name
-* [ ] airflow
+* [x] airflow
 * [ ] Log
 * [ ] Set fastq paired-end reads as secondaryFiles
 * [ ] Skip if output exist
@@ -100,11 +147,24 @@ arguments:
     prefix: -o
 ```
 
+## Result of cwl-airflow
+
+The dependency graph of cwl
+
+![](https://raw.githubusercontent.com/linnil1/cwl_example/main/airflow/cwl-graph.png)
+
+The status of cwl of each triggers
+
+![](https://raw.githubusercontent.com/linnil1/cwl_example/main/airflow/cwl-status.png)
+
 
 ## Reference
 * [CWL spec](https://www.commonwl.org/v1.2/Workflow.html)
 * [cwltool](https://github.com/common-workflow-language/cwltool)
 * [cwl-airflow](https://github.com/Barski-lab/cwl-airflow)
+* bowtie2
+* samtools
+* podman
 
 
 ## LICENSE
