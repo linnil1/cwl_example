@@ -1,0 +1,11 @@
+reference_fasta: 
+  class: File
+  path: data/chrx.fa
+fastq_1: 
+  class: File
+  path: data/chrx.synthetic.read1.fq
+fastq_2: 
+  class: File
+  path: data/chrx.synthetic.read2.fq
+
+threads: 10

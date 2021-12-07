@@ -1,3 +1,4 @@
+# main files
 reference_fasta: 
   class: File
   path: data/chrx.fa
@@ -7,10 +8,9 @@ fastq_1:
 fastq_2: 
   class: File
   path: data/chrx.synthetic.read2.fq
-
 threads: 10
-# cwltool --user-space-docker-cmd=podman bowtie2_map.cwl test_var.yml
-#
+
+# Temporary files
 reference_index: 
   class: File
   path: chrx.1.bt2

@@ -12,7 +12,7 @@ baseCommand: bowtie2-build
 
 arguments:
   - position: 2
-    valueFrom: $( inputs.fastq_1.nameroot )
+    valueFrom: $( inputs.reference_fasta.nameroot )
 
 inputs:
   reference_fasta:
