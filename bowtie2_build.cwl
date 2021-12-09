@@ -1,4 +1,4 @@
-# cwltool --user-space-docker-cmd=podman bowtie2_build.cwl test_var.yml
+# cwltool --user-space-docker-cmd=podman bowtie2_build.cwl chrx_test.yml
 cwlVersion: v1.2
 hints:
   DockerRequirement:

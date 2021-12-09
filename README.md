@@ -100,8 +100,8 @@ python3 -c "import json; import yaml; print(json.dumps({'job': yaml.load(open('c
 * [x] airflow
 * [x] Log
 * [ ] Set fastq paired-end reads as secondaryFiles
-* [ ] put file into correct folder, not flatten structure
 * [ ] CWL scatter
+* [ ] put file into correct folder, not flatten structure (Partially solved)
 * [ ] Skip if output exist (No you cannot)
 
 
@@ -277,6 +277,28 @@ Logs
 [2021-12-09 14:03:37,585] {taskinstance.py:1212} INFO - Marking task as SUCCESS. dag_id=bowtie2_cwl, task_id=bowtie_map, execution_date=20211209T060256, start_date=20211209T060325, end_date=20211209T060337
 [2021-12-09 14:03:37,640] {local_task_job.py:151} INFO - Task exited with return code 0
 [2021-12-09 14:03:37,682] {local_task_job.py:261} INFO - 1 downstream tasks scheduled from follow-on schedule check
+```
+
+> Folder
+
+It's not that easy than I though, I need to add folder manually.
+
+``` yml
+hints:
+  InitialWorkDirRequirement:
+    listing:
+    - entry: $( inputs.output_folder )
+arguments:
+  - valueFrom: $( inputs.output_folder.path + "/" + inputs.fastq_1.basename.slice(0, -9) + ".bowtie.sam" )
+    prefix: -S
+inputs:
+  output_folder:
+    type: Directory
+outputs:
+  bowtie_output_sam_tmp:
+    type: File
+    outputBinding:
+      glob: $( inputs.output_folder.path + "/" + inputs.fastq_1.basename.slice(0, -9) + ".bowtie.sam" )
 ```
 
 
