@@ -100,9 +100,9 @@ python3 -c "import json; import yaml; print(json.dumps({'job': yaml.load(open('c
 * [x] airflow
 * [x] Log
 * [ ] Set fastq paired-end reads as secondaryFiles
-* [ ] Skip if output exist
 * [ ] put file into correct folder, not flatten structure
 * [ ] CWL scatter
+* [ ] Skip if output exist (No you cannot)
 
 
 ## Some Tricks
